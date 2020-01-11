@@ -61,7 +61,7 @@ public class DeviceExtras extends PreferenceFragment
     private static final String TAG = DeviceExtras.class.getSimpleName();
 
     public static final String KEY_SETTINGS_PREFIX = "device_setting_";
-
+    private static final String KEY_ENABLE_DOLBY_ATMOS = "enable_dolby_atmos";
     public static final String KEY_AUTO_HBM_SWITCH = "auto_hbm";
     public static final String KEY_AUTO_HBM_THRESHOLD = "auto_hbm_threshold";
     public static final String KEY_DC_SWITCH = "dc";
@@ -77,6 +77,7 @@ public class DeviceExtras extends PreferenceFragment
     public static final String KEY_USB2_SWITCH = "usb2_fast_charge";
     public static final String KEY_VIBSTRENGTH = "vib_strength";
 
+    private static TwoStatePreference mEnableDolbyAtmos;
     private static ListPreference mFpsInfoPosition;
     private static ListPreference mFpsInfoColor;
     private static SwitchPreference mFpsInfo;
@@ -99,6 +100,9 @@ public class DeviceExtras extends PreferenceFragment
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getContext());
         addPreferencesFromResource(R.xml.main);
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mEnableDolbyAtmos = (TwoStatePreference) findPreference(KEY_ENABLE_DOLBY_ATMOS);
+        mEnableDolbyAtmos.setOnPreferenceChangeListener(this);
 
         // DozeSettings Activity
         mDozeSettings = (Preference)findPreference(KEY_DOZE);
@@ -252,6 +256,23 @@ public class DeviceExtras extends PreferenceFragment
                 if (isFPSOverlayRunning()) {
                     restartFpsInfo(mContext);
                 }
+            }
+            return true;
+        } else if (preference == mEnableDolbyAtmos) {
+            boolean enabled = (Boolean) newValue;
+            Intent daxService = new Intent();
+            ComponentName name = new ComponentName("com.dolby.daxservice", "com.dolby.daxservice.DaxService");
+            daxService.setComponent(name);
+            if (enabled) {
+                // enable service component and start service
+                this.getContext().getPackageManager().setComponentEnabledSetting(name,
+                        PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, 0);
+                this.getContext().startService(daxService);
+            } else {
+                // disable service component and stop service
+                this.getContext().stopService(daxService);
+                this.getContext().getPackageManager().setComponentEnabledSetting(name,
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0);
             }
             return true;
         } else if (preference == mFpsInfoTextSizePreference) {
