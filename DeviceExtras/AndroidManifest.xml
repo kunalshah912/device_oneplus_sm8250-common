@@ -130,6 +130,18 @@
             android:name=".doze.DozeService"
             android:permission="OneplusDozeService" />
 
+        <!-- Dolby Tile -->
+        <service
+            android:name=".DolbyTileService"
+            android:icon="@drawable/ic_dolby_atmos"
+            android:label="@string/dolby_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action
+                    android:name="android.service.quicksettings.action.QS_TILE"/>
+            </intent-filter>
+        </service>
+
         <!-- Doze Activity -->
         <activity
             android:name=".doze.DozeSettingsActivity"
