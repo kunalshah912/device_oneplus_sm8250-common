@@ -29,7 +29,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceManager;
-import com.dot.device.DeviceSettings.MonetPreferenceActivity;
+import org.evolution.device.DeviceExtras.Services.MonetPreferenceActivity;
 
 
 public class DeviceExtrasActivity extends MonetPreferenceActivity {

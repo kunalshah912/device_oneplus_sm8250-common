@@ -1,4 +1,4 @@
-package org.evolution.device.DeviceExtras.Services;
+package org.evolution.device.DeviceExtras.doze;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
