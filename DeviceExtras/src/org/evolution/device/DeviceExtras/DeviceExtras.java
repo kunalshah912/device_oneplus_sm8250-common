@@ -47,6 +47,7 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import androidx.preference.TwoStatePreference;
+import org.evolution.device.DeviceExtras.Services.DolbySwitch;
 
 import java.util.Arrays;
 
@@ -77,6 +78,7 @@ public class DeviceExtras extends PreferenceFragment
     public static final String KEY_USB2_SWITCH = "usb2_fast_charge";
     public static final String KEY_VIBSTRENGTH = "vib_strength";
 
+    private DolbySwitch mDolbySwitch;
     private static TwoStatePreference mEnableDolbyAtmos;
     private static ListPreference mFpsInfoPosition;
     private static ListPreference mFpsInfoColor;
@@ -101,7 +103,9 @@ public class DeviceExtras extends PreferenceFragment
         addPreferencesFromResource(R.xml.main);
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mDolbySwitch = new DolbySwitch(this.getContext());
         mEnableDolbyAtmos = (TwoStatePreference) findPreference(KEY_ENABLE_DOLBY_ATMOS);
+        mEnableDolbyAtmos.setChecked(mDolbySwitch.isCurrentlyEnabled());
         mEnableDolbyAtmos.setOnPreferenceChangeListener(this);
 
         // DozeSettings Activity
@@ -259,21 +263,7 @@ public class DeviceExtras extends PreferenceFragment
             }
             return true;
         } else if (preference == mEnableDolbyAtmos) {
-            boolean enabled = (Boolean) newValue;
-            Intent daxService = new Intent();
-            ComponentName name = new ComponentName("com.dolby.daxservice", "com.dolby.daxservice.DaxService");
-            daxService.setComponent(name);
-            if (enabled) {
-                // enable service component and start service
-                this.getContext().getPackageManager().setComponentEnabledSetting(name,
-                        PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, 0);
-                this.getContext().startService(daxService);
-            } else {
-                // disable service component and stop service
-                this.getContext().stopService(daxService);
-                this.getContext().getPackageManager().setComponentEnabledSetting(name,
-                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0);
-            }
+            mDolbySwitch.setEnabled((Boolean) newValue);
             return true;
         } else if (preference == mFpsInfoTextSizePreference) {
             int size = Integer.parseInt(newValue.toString());

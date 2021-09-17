@@ -26,7 +26,11 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import androidx.preference.PreferenceManager;
 
+import org.evolution.device.DeviceExtras.Services.DolbySwitch;
+
 public class Startup extends BroadcastReceiver {
+
+    private static final String ONE_TIME_DOLBY = "dolby_init_disabled";
 
     @Override
     public void onReceive(final Context context, final Intent bootintent) {
@@ -52,7 +56,14 @@ public class Startup extends BroadcastReceiver {
         enabled = sharedPrefs.getBoolean(DeviceExtras.KEY_USB2_SWITCH, false);
         if (enabled) {
         restore(USB2FastChargeModeSwitch.getFile(), enabled);
-       }
+        }
+        enabled = sharedPrefs.getBoolean(ONE_TIME_DOLBY, false);
+        if (!enabled) {
+            // we want to disable it by default, only once.
+            DolbySwitch dolbySwitch = new DolbySwitch(context);
+            dolbySwitch.setEnabled(false);
+            sharedPrefs.edit().putBoolean(ONE_TIME_DOLBY, true).apply();
+        }
         DeviceExtras.restoreSliderStates(context);
         org.evolution.device.DeviceExtras.doze.DozeUtils.checkDozeService(context);
         org.evolution.device.DeviceExtras.kcal.KCalSettings.restore(context);
