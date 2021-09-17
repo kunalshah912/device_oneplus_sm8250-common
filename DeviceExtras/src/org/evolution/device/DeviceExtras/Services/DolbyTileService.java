@@ -1,8 +1,11 @@
 package org.evolution.device.DeviceExtras;
 
 import android.annotation.TargetApi;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
+import org.evolution.device.DeviceExtras.Services.DolbySwitch;
 
 @TargetApi(24)
 public class DolbyTileService extends TileService {
@@ -24,6 +27,8 @@ public class DolbyTileService extends TileService {
     @Override
     public void onStartListening() {
         super.onStartListening();
+        getQsTile().setState(DolbySwitch.isCurrentlyEnabled(this, new ComponentName("com.dolby.daxservice", "com.dolby.daxservice.DaxService")) ? Tile.STATE_INACTIVE : Tile.STATE_UNAVAILABLE);
+        getQsTile().updateTile();
     }
 
     @Override
