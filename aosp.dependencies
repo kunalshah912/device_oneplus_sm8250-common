@@ -1,0 +1,26 @@
+[
+  {
+    "remote":      "acoffeerunner",
+    "repository":  "kernel_oneplus_sm8250",
+    "target_path": "kernel/oneplus/sm8250",
+    "branch":      "lineage-18.1"
+  },
+  {
+    "remote":      "kunalshah912",
+    "repository":  "android_packages_apps_TouchGestures",
+    "target_path": "packages/apps/TouchGestures",
+    "branch":      "snowcone"
+  },
+  {
+    "remote":      "kunalshah912",
+    "repository":  "vendor_oneplus_sm8250-common",
+    "target_path": "vendor/oneplus/sm8250-common",
+    "branch":      "snowcone"
+  },
+  {
+    "remote":      "kunalshah912",
+    "repository":  "device_oneplus_oneplus-fwk",
+    "target_path": "device/oneplus/oneplus-fwk",
+    "branch":      "snowcone"
+  }
+]
